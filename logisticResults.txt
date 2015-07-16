@@ -1,0 +1,260 @@
+Learning rate: 0.050000
+Max epochs: 100
+Seed: 134578961
+Batch size: 100
+4434 of 10000 (44.3400%) correctly classified
+
+Learning rate: 0.050000
+Max epochs: 150
+Seed: 134578961
+Batch size: 60
+5374 of 10000 (53.740000%) correctly classified
+
+Learning rate: 0.050000
+Max epochs: 150
+Seed: 134578961
+Batch size: 70
+5845 of 10000 (58.450000%) correctly classified
+
+Learning rate: 0.050000
+Max epochs: 250
+Seed: 134578961
+Batch size: 50
+6103 of 10000 (61.030000%) correctly classified 
+
+Learning rate: 0.050000
+Max epochs: 100
+Seed: 134578961
+Batch size: 60
+6061 of 10000 (60.610000%) correctly classified
+
+Learning rate: 0.025000
+Max epochs: 100
+Seed: 98758134
+Batch size: 60
+6287 of 10000 (62.870000%) correctly classified
+
+Learning rate: 0.030000
+Max epochs: 100
+Seed: 98758134
+Batch size: 60
+6354 of 10000 (63.540000%) correctly classified
+
+#NO DECAY
+Learning rate: 0.020000
+Max epochs: 60
+Seed: 6082015
+Batch size: 10
+6126 of 10000 (61.260000%) correctly classified
+
+Learning rate: 0.020000
+Max epochs: 100
+Seed: 6082015
+Batch size: 5
+6301 of 10000 (63.010000%) correctly classified
+
+Learning rate: 0.025000
+Max epochs: 150
+Seed: 6082015
+Batch size: 3
+6328 of 10000 (63.280000%) correctly classified
+
+Learning rate: 0.005000
+Max epochs: 1000
+Seed: 6082015
+Batch size: 3
+6458 of 10000 (64.580000%) correctly classified
+
+Learning rate: 0.001000
+Max epochs: 12000
+Seed: 6082015
+Batch size: 1
+6220 of 10000 (62.200000%) correctly classified
+
+#Replaced gradients[k][j] += error * (samples[sampleIndex].inputs[k] > 0 ? 1.0 : -1.0);
+#with gradients[k][j] += error * samples[sampleIndex].inputs[k];
+Learning rate: 0.010000
+Max epochs: 100
+Seed: 6082015
+Batch size: 60
+7191 of 10000 (71.910000%) correctly classified
+
+Learning rate: 0.010000
+Max epochs: 120
+Seed: 6082015
+Batch size: 30
+7201 of 10000 (72.010000%) correctly classified
+
+Learning rate: 0.005000
+Max epochs: 1000
+Seed: 6082015
+Batch size: 3
+6936 of 10000 (69.360000%) correctly classified
+
+Learning rate: 0.005000
+Max epochs: 1500
+Seed: 6082015
+Batch size: 3
+7124 of 10000 (71.240000%) correctly classified
+
+Learning rate: 0.005000
+Max epochs: 2000
+Seed: 6082015
+Batch size: 3
+7221 of 10000 (72.210000%) correctly classified
+
+Max epochs: 2500
+Seed: 6082015
+Batch size: 3
+7272 of 10000 (72.720000%) correctly classified
+
+Learning rate: 0.005000
+Max epochs: 2300
+Seed: 6082015
+Batch size: 3
+7340 of 10000 (73.400000%) correctly classified
+
+Learning rate: 0.003000
+Max epochs: 2300
+Seed: 6082015
+Batch size: 3
+7302 of 10000 (73.020000%) correctly classified
+
+Learning rate: 0.002000
+Max epochs: 7000
+Seed: 6082015
+Batch size: 1
+7147 of 10000 (71.470000%) correctly classified
+
+Learning rate: 0.002000
+Max epochs: 10000
+Seed: 6082015
+Batch size: 1
+7157 of 10000 (71.570000%) correctly classified
+
+Learning rate: 0.002000
+Max epochs: 20000
+Seed: 6082015
+Batch size: 1
+7431 of 10000 (74.310000%) correctly classified
+
+Learning rate: 0.002000
+Max epochs: 25000
+Seed: 6082015
+Batch size: 1
+7438 of 10000 (74.380000%) correctly classified
+
+Learning rate: 0.002000
+Max epochs: 30000
+Seed: 6082015
+Batch size: 1
+7447 of 10000 (74.470000%) correctly classified
+
+Learning rate: 0.001000
+Max epochs: 60000
+Seed: 6082015
+Batch size: 1
+7438 of 10000 (74.380000%) correctly classified
+
+Learning rate: 0.001000
+Max epochs: 60000
+Seed: 17504813
+Batch size: 1
+7544 of 10000 (75.440000%) correctly classified
+
+Learning rate: 0.000500
+Max epochs: 80000
+Seed: 17504813
+Batch size: 1
+7544 of 10000 (75.440000%) correctly classified
+
+#USED ACTUAL DERIVATIVE OF ACTIVATION FUNCTION
+
+Learning rate: 0.010000
+Max epochs: 300
+Seed: 6082015
+Batch size: 60
+7408 of 10000 (74.080000%) correctly classified
+
+Learning rate: 0.010000
+Max epochs: 700
+Seed: 6082015
+Batch size: 30
+7425 of 10000 (74.250000%) correctly classified
+
+Learning rate: 0.010000
+Max epochs: 1300
+Seed: 6082015
+Batch size: 10
+7395 of 10000 (73.950000%) correctly classified
+
+Max epochs: 2000
+Seed: 6082015
+Batch size: 10
+7445 of 10000 (74.450000%) correctly classified
+
+Learning rate: 0.010000
+Max epochs: 2500
+Seed: 6082015
+Batch size: 10
+7462 of 10000 (74.620000%) correctly classified
+
+Learning rate: 0.005000
+Max epochs: 3000
+Seed: 6082015
+Batch size: 10
+7466 of 10000 (74.660000%) correctly classified
+
+Learning rate: 0.005000
+Max epochs: 3500
+Seed: 6082015
+Batch size: 10
+7495 of 10000 (74.950000%) correctly classified
+
+Learning rate: 0.005000
+Max epochs: 4000
+Seed: 6082015
+Batch size: 10
+7533 of 10000 (75.330000%) correctly classified
+
+Learning rate: 0.005000
+Max epochs: 5000
+Seed: 6082015
+Batch size: 10
+7543 of 10000 (75.430000%) correctly classified
+
+Learning rate: 0.005000
+Max epochs: 10000
+Seed: 6082015
+Batch size: 3
+7465 of 10000 (74.650000%) correctly classified
+
+Learning rate: 0.005000
+Max epochs: 15000
+Seed: 6082015
+Batch size: 3
+7548 of 10000 (75.480000%) correctly classified
+
+Learning rate: 0.005000
+Max epochs: 30000
+Seed: 6082015
+Batch size: 1
+7465 of 10000 (74.650000%) correctly classified
+
+Learning rate: 0.005000
+Max epochs: 35000
+Seed: 6082015
+Batch size: 1
+7495 of 10000 (74.950000%) correctly classified
+
+Learning rate: 0.005000
+Max epochs: 40000
+Seed: 6082015
+Batch size: 1
+7533 of 10000 (75.330000%) correctly classified
+
+Learning rate: 0.005000
+Max epochs: 40000
+Seed: 7305891
+Batch size: 1
+7536 of 10000 (75.360000%) correctly classified
