@@ -12,6 +12,16 @@ main.o: main.c sample.h
 logisticRegression.o: logisticRegression.c logisticRegression.h sample.h 
 	$(CC) $(CCFLAGS) logisticRegression.c
 
+#the folling two are just for test code
+vectorTests: vectorTests.o vector.o
+	$(CC) vectorTests.o vector.o $(CLFLAGS) main
+
+vectorTests.o: vectorTests.c
+	$(CC) $(CCFLAGS) vectorTests.c
+
+vector.o: vector.c vector.h
+	$(CC) $(CCFLAGS) vector.c
+
 mnist.o: mnist.c mnist.h sample.h
 	$(CC) $(CCFLAGS) mnist.c
 
