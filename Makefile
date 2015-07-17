@@ -12,12 +12,22 @@ main.o: main.c sample.h
 logisticRegression.o: logisticRegression.c logisticRegression.h sample.h 
 	$(CC) $(CCFLAGS) logisticRegression.c
 
-#the folling two are just for test code
+#START TESTING CODE
+neuralNetworkTests: neuralNetworkTests.o neuralNetwork.o
+	$(CC) neuralNetworkTests.o neuralNetwork.o $(CLFLAGS) main
+
+neuralNetworkTests.o: neuralNetwork.c
+	$(CC) $(CCFLAGS) neuralNetworkTests.c
+
 vectorTests: vectorTests.o vector.o
 	$(CC) vectorTests.o vector.o $(CLFLAGS) main
 
 vectorTests.o: vectorTests.c
 	$(CC) $(CCFLAGS) vectorTests.c
+#END TESTING CODE
+
+neuralNetwork.o: neuralNetwork.h neuralNetwork.c
+	$(CC) $(CCFLAGS) neuralNetwork.c
 
 vector.o: vector.c vector.h
 	$(CC) $(CCFLAGS) vector.c
