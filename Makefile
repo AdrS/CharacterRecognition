@@ -13,8 +13,8 @@ logisticRegression.o: logisticRegression.c logisticRegression.h sample.h
 	$(CC) $(CCFLAGS) logisticRegression.c
 
 #START TESTING CODE
-neuralNetworkTests: neuralNetworkTests.o neuralNetwork.o
-	$(CC) neuralNetworkTests.o neuralNetwork.o $(CLFLAGS) main
+neuralNetworkTests: neuralNetworkTests.o neuralNetwork.o vector.o
+	$(CC) neuralNetworkTests.o neuralNetwork.o vector.o $(CLFLAGS) main
 
 neuralNetworkTests.o: neuralNetwork.c
 	$(CC) $(CCFLAGS) neuralNetworkTests.c
