@@ -1,5 +1,6 @@
 #include <stdio.h>
 #include "vector.h"
+#include "functions.h"
 
 #ifndef __NEURAL_NETWORK__
 #define __NEURAL_NETWORK__

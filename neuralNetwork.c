@@ -50,7 +50,7 @@ int createNet(NeuralNetwork* net, unsigned int* sizes, unsigned int layers) {
 		allocated += sizeof(double) * sizes[i];
 		//initialize biases
 		for(j = 0; j < sizes[i]; j++) {
-			net->biases[i - 1][j] = 0.0;	//TODO: pick value from gaussian distibution
+			net->biases[i - 1][j] = sampleGuassianDistribution(0.0, 1.0);
 		}
 		net->weights[i - 1] = allocated;
 		allocated += sizeof(double**) * sizes[i - 1];
@@ -58,10 +58,10 @@ int createNet(NeuralNetwork* net, unsigned int* sizes, unsigned int layers) {
 			net->weights[i - 1][j] = allocated;
 			allocated += sizeof(double*) * sizes[i];
 			for(k = 0; k < sizes[i]; k++) {
-				net->weights[i - 1][j][k] = 0.0;	//TODO: see gaussian distibution comment
+				net->weights[i - 1][j][k] = sampleGuassianDistribution(0.0, 1.0);
 			}
 		}
-		//TODO: write code for setting up weights + activation function
+		//TODO: activation function
 	}
 	return 0;
 }
