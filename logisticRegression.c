@@ -1,9 +1,5 @@
 #include "logisticRegression.h"
 
-double random(double min, double max) {
-	assert(max > min);
-	return (max - min)*rand()/RAND_MAX + min;
-}
 int isValid(LogisticRegressionClassifier* classifier, char deep) {
 	int i;
 	char valid = classifier && classifier->weights && classifier->features && classifier->classes;
@@ -41,7 +37,7 @@ int createClassifier(LogisticRegressionClassifier* classifier,
 			return -1;
 		}
 		for(j = 0; j < classifier->classes; j++) {
-			classifier->weights[i][j] = random(-0.5, 0.5);
+			classifier->weights[i][j] = randomInt(-0.5, 0.5);
 		}
 	}
 	return 0;
@@ -171,13 +167,6 @@ int batchTrain(LogisticRegressionClassifier* classifier, Sample* samples,
 	free(output);
 	free(input);
 	return 0;
-}
-double logisticFunction(double x) {
-	return 1.0/(1.0 + exp(-x));
-}
-double logisticFunctionDerivative(double x) {
-	double e = exp(-x);
-	return e/((1 + e)*(1 + e));
 }
 void printWeights(FILE* output, LogisticRegressionClassifier* classifier) {
 	int i, j;

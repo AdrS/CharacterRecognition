@@ -3,6 +3,10 @@
 double random() {
 	return (double)rand()/RAND_MAX;
 }
+double randomInt(double min, double max) {
+	assert(max > min);
+	return (max - min)*rand()/RAND_MAX + min;
+}
 double sampleGuassianDistribution(double mean, double stdev) {
 	//see https://en.wikipedia.org/wiki/Box-Muller_transform
 	static double z1;
@@ -18,4 +22,11 @@ double sampleGuassianDistribution(double mean, double stdev) {
 	z0 = sqrt(-2.0 * log(u1)) * cos(2 * 3.14159265358979323846 * u2);
 	z1 = sqrt(-2.0 * log(u1)) * sin(2 * 3.14159265358979323846 * u2);
 	return z0 * stdev + mean;
+}
+double logisticFunction(double x) {
+	return 1.0/(1.0 + exp(-x));
+}
+double logisticFunctionDerivative(double x) {
+	double e = exp(-x);
+	return e/((1 + e)*(1 + e));
 }

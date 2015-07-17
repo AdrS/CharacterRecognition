@@ -3,6 +3,7 @@
 #include <stdio.h>
 #include <assert.h>
 #include "sample.h"
+#include "functions.h"
 
 #ifndef __LOGISTIC_REGRESSION_HEADER__
 #define __LOGISTIC_REGRESSION_HEADER__
@@ -21,12 +22,6 @@ int createClassifier(LogisticRegressionClassifier* classifier,
 //probabilites of class membership are stored in output and the index of the maximum 
 //is returned (or -2 for invalid params)
 int classify(LogisticRegressionClassifier* classifier, double* input, double* output);
-
-//f(x) = 1/(1 + exp(-x))
-double logisticFunction(double x);
-
-//f'(x) = exp(-x)/(1 + exp(-x))^2
-double logisticFunctionDerivative(double x);
 
 //if output is null, stdout is used
 void printWeights(FILE* output, LogisticRegressionClassifier* classifier);

@@ -3,13 +3,14 @@ CCFLAGS = -c -Wall
 CLFLAGS = -o
 
 all: main
-main: logisticRegression.o mnist.o main.o
-	$(CC) logisticRegression.o mnist.o main.o $(CLFLAGS) main
+main: logisticRegression.o mnist.o main.o functions.o
+	$(CC) logisticRegression.o mnist.o main.o functions.o $(CLFLAGS) main
 
+#TODO: does sample.h need to be here? (analogous question for other recipies)
 main.o: main.c sample.h
 	$(CC) $(CCFLAGS) main.c
 
-logisticRegression.o: logisticRegression.c logisticRegression.h sample.h 
+logisticRegression.o: logisticRegression.c logisticRegression.h
 	$(CC) $(CCFLAGS) logisticRegression.c
 
 #START TESTING CODE
