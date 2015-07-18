@@ -25,6 +25,7 @@ int main() {
 	}
 	printNet(stdout, &xorNet);
 	trainNet(&xorNet, xorSamples, 4, 20, 4, 0.1);
+	printSamples(NULL, xorSamples, 4, 2, 1);
 	deleteNet(&xorNet, 0);
 	/*
 	NeuralNetwork nn;

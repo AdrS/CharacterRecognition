@@ -106,9 +106,13 @@ int isValidNet(NeuralNetwork* net) {
 }
 int trainNet(NeuralNetwork* net, Sample* samples, unsigned int numberOfSamples,
 	unsigned int epochs, unsigned int batchSize, double learningRate) {
+	unsigned int epoch = 0;
 	if(!samples || epochs < 1 || batchSize < 1 || batchSize > numberOfSamples
 		|| learningRate <= 0.0 || !isValidNet(net)) {
 		return -2;
+	}
+	while(epoch < epochs) {
+		epoch++;
 	}
 	return 0;
 }

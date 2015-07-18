@@ -3,8 +3,8 @@ CCFLAGS = -c -Wall
 CLFLAGS = -o
 
 all: main
-main: logisticRegression.o mnist.o main.o functions.o
-	$(CC) logisticRegression.o mnist.o main.o functions.o $(CLFLAGS) main
+main: logisticRegression.o mnist.o main.o functions.o sample.o vector.o
+	$(CC) logisticRegression.o mnist.o main.o functions.o sample.o vector.o $(CLFLAGS) main
 
 #TODO: does sample.h need to be here? (analogous question for other recipies)
 main.o: main.c sample.h
@@ -14,8 +14,8 @@ logisticRegression.o: logisticRegression.c logisticRegression.h
 	$(CC) $(CCFLAGS) logisticRegression.c
 
 #START TESTING CODE
-neuralNetworkTests: neuralNetworkTests.o neuralNetwork.o vector.o functions.o
-	$(CC) neuralNetworkTests.o neuralNetwork.o vector.o functions.o $(CLFLAGS) main
+neuralNetworkTests: neuralNetworkTests.o neuralNetwork.o vector.o functions.o sample.o
+	$(CC) neuralNetworkTests.o neuralNetwork.o vector.o functions.o sample.o $(CLFLAGS) main
 
 neuralNetworkTests.o: neuralNetwork.c
 	$(CC) $(CCFLAGS) neuralNetworkTests.c
@@ -27,6 +27,9 @@ vectorTests.o: vectorTests.c
 	$(CC) $(CCFLAGS) vectorTests.c
 #END TESTING CODE
 
+sample.o: sample.c sample.h
+	$(CC) $(CCFLAGS) sample.c
+	
 neuralNetwork.o: neuralNetwork.h neuralNetwork.c
 	$(CC) $(CCFLAGS) neuralNetwork.c
 
