@@ -1,4 +1,6 @@
 #include <stdio.h>
+#include <stdlib.h>
+#include <time.h>
 #include "neuralNetwork.h"
 #include "sample.h"
 
@@ -18,14 +20,21 @@ int main() {
 				{s4i, s4o}};
 	int ret;
 	NeuralNetwork xorNet;
+	//srand(time(NULL));
 	ret = createNet(&xorNet, xorLayerSizes, 3, LOGISTIC);
 	if(ret) {
 		printf("could not create net\n");
 		return ret;
 	}
+	printf("ORIGINAL SAMPLES\n");
+	printSamples(NULL, xorSamples, 4, 2, 1);
+	shuffleSamples(xorSamples, 4);
+	printf("\nSHUFFLED SAMPLES\n");
+	printSamples(NULL, xorSamples, 4, 2, 1);
+	putchar('\n');
+
 	printNet(stdout, &xorNet);
 	trainNet(&xorNet, xorSamples, 4, 20, 4, 0.1);
-	printSamples(NULL, xorSamples, 4, 2, 1);
 	deleteNet(&xorNet, 0);
 	/*
 	NeuralNetwork nn;

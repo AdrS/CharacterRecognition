@@ -3,9 +3,15 @@
 double random() {
 	return (double)rand()/RAND_MAX;
 }
-double randomInt(double min, double max) {
+double randomRange(double min, double max) {
 	assert(max > min);
 	return (max - min)*rand()/RAND_MAX + min;
+}
+int randomInt(int min, int max) {
+	max++;
+	assert(max > min);
+	//TODO: this does not yield uniformly random values
+	return rand() % (max - min) + min;
 }
 double sampleGuassianDistribution(double mean, double stdev) {
 	//see https://en.wikipedia.org/wiki/Box-Muller_transform

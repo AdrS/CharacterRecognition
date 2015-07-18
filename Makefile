@@ -17,7 +17,7 @@ logisticRegression.o: logisticRegression.c logisticRegression.h
 neuralNetworkTests: neuralNetworkTests.o neuralNetwork.o vector.o functions.o sample.o
 	$(CC) neuralNetworkTests.o neuralNetwork.o vector.o functions.o sample.o $(CLFLAGS) main
 
-neuralNetworkTests.o: neuralNetwork.c
+neuralNetworkTests.o: neuralNetworkTests.c
 	$(CC) $(CCFLAGS) neuralNetworkTests.c
 
 vectorTests: vectorTests.o vector.o

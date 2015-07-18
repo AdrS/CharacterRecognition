@@ -112,6 +112,7 @@ int trainNet(NeuralNetwork* net, Sample* samples, unsigned int numberOfSamples,
 		return -2;
 	}
 	while(epoch < epochs) {
+		shuffleSamples(samples, numberOfSamples);
 		epoch++;
 	}
 	return 0;

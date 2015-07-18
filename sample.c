@@ -1,8 +1,17 @@
 #include "sample.h"
 
 void shuffleSamples(Sample* samples, unsigned int number) {
+	//see https://en.wikipedia.org/wiki/Fisher-Yates_shuffle
+	unsigned int i, j;
+	Sample tmp;
 	if(!samples) {
 		return;
+	}
+	for(i = 0; i < number - 1; i++) {
+		j = randomInt(i, number - 1);
+		tmp = samples[i];
+		samples[i] = samples[j];
+		samples[j] = tmp;
 	}
 }
 int printSamples(FILE* out, Sample* samples, unsigned int number, unsigned int inputs, unsigned int outputs) {

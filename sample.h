@@ -1,5 +1,5 @@
 #include <stdio.h>
-#include <stdlib.h>
+#include "functions.h"
 #include "vector.h"
 
 #ifndef __SAMPLE_HEADER__

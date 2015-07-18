@@ -6,9 +6,12 @@
 #ifndef __FUNCTIONS_HEADER__
 #define __FUNCTIONS_HEADER__
 
-//returns a pseudo random number in from [0, 1]
+//returns a pseudo random number in [0, 1]
 double random();
-double randomInt(double min, double max);
+//returns a pseudo random from the specified range
+double randomRange(double min, double max);
+//returns a pseudo random from [min, max]
+int randomInt(int min, int max);
 double sampleGuassianDistribution(double mean, double stdev);
 //f(x) = 1/(1 + exp(-x))
 double logisticFunction(double x);
