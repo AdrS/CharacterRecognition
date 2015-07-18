@@ -1,6 +1,7 @@
 #include <stdio.h>
 #include "vector.h"
 #include "functions.h"
+#include "sample.h"
 
 #ifndef __NEURAL_NETWORK__
 #define __NEURAL_NETWORK__
@@ -31,4 +32,8 @@ int deleteNet(NeuralNetwork* net, char freeLayerSizes);
 void printNet(FILE* out, NeuralNetwork* net);
 
 //feedForward
+//returns 0 on success, -1 on failure, -2 on invalid params
+int trainNet(NeuralNetwork* net, Sample* samples, unsigned int numberOfSamples,
+	unsigned int epochs, unsigned int batchSize, double learningRate);
+int isValidNet(NeuralNetwork* net);
 #endif

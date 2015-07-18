@@ -94,6 +94,22 @@ int deleteNet(NeuralNetwork* net, char freeLayerSizes) {
 	net->biases = NULL;
 	net->weights = NULL;
 	net->activationFunction = NULL;
+	net->activationFunctionDerivative = NULL;
+	return 0;
+}
+int isValidNet(NeuralNetwork* net) {
+	if(!net || !net->layerSizes || !net->biases || !net->weights || !net->activationFunction
+		|| !net->activationFunctionDerivative) {
+		return 0;
+	}
+	return 1;
+}
+int trainNet(NeuralNetwork* net, Sample* samples, unsigned int numberOfSamples,
+	unsigned int epochs, unsigned int batchSize, double learningRate) {
+	if(!samples || epochs < 1 || batchSize < 1 || batchSize > numberOfSamples
+		|| learningRate <= 0.0 || !isValidNet(net)) {
+		return -2;
+	}
 	return 0;
 }
 void printNet(FILE* out, NeuralNetwork* net) {
