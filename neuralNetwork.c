@@ -1,13 +1,28 @@
 #include <stdlib.h>
 #include "neuralNetwork.h"
 
-int createNet(NeuralNetwork* net, unsigned int* sizes, unsigned int layers) {
-	//TODO: pass enum representing activation function
+int createNet(NeuralNetwork* net, unsigned int* sizes, unsigned int layers, ActivationFunctionType type) {
 	unsigned int totalMemForWeights = 0, totalMemForPointers = 0, i, j, k;
 	void* allocated;
 	//there must at least be an input and an output layer
 	if(!net || !sizes || layers < 2) {
 		return -2;
+	}
+	switch (type) {
+		case LOGISTIC:
+			net->activationFunction = logisticFunction;
+			net->activationFunctionDerivative = logisticFunctionDerivative;
+		break;
+		case IDENTITY:
+			net->activationFunction = identity;
+			net->activationFunctionDerivative = identity;
+		break;
+		case HYPERBOLIC_TANGENT:
+			net->activationFunction = tanh;
+			net->activationFunctionDerivative = hyperbolicTangentDerivative;
+		break;
+		default:
+			return -2;
 	}
 	if(sizes[0] < 1) {
 		return -2;
@@ -39,6 +54,7 @@ int createNet(NeuralNetwork* net, unsigned int* sizes, unsigned int layers) {
 	net->layers = layers;
 	net->layerSizes = sizes;
 	net->_allocated = allocated;
+
 	//divy up memory for all layers with inputs
 	net->biases = allocated;
 	allocated += sizeof(double*) * (layers - 1);
@@ -61,7 +77,6 @@ int createNet(NeuralNetwork* net, unsigned int* sizes, unsigned int layers) {
 				net->weights[i - 1][j][k] = sampleGuassianDistribution(0.0, 1.0);
 			}
 		}
-		//TODO: activation function
 	}
 	return 0;
 }

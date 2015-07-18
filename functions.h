@@ -15,4 +15,10 @@ double logisticFunction(double x);
 //f'(x) = exp(-x)/(1 + exp(-x))^2
 double logisticFunctionDerivative(double x);
 
+//(tanh)' = sech^2
+//hyperbolic tangent is already implemented in math.h as tanh
+double hyperbolicTangentDerivative(double x);
+
+double identity(double x);
+
 #endif

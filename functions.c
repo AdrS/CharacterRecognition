@@ -30,3 +30,10 @@ double logisticFunctionDerivative(double x) {
 	double e = exp(-x);
 	return e/((1 + e)*(1 + e));
 }
+double hyperbolicTangentDerivative(double x) {
+	double s = cosh(x);
+	return 1.0/(s*s);
+}
+double identity(double x) {
+	return x;
+}
