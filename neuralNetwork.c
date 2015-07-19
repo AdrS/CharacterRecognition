@@ -125,6 +125,25 @@ int isValidNet(NeuralNetwork* net) {
 	}
 	return 1;
 }
+void initializeDeltas(NeuralNetwork* net) {
+	//TODO: this logic would be easier if all deltas were in one coninuous piece of memory
+	unsigned int i, j, k;
+	if(!isValidNet(net)) {
+		return;
+	}
+	//for each layer except the input
+	for(i = 0; i < net->layers - 1; i++) {
+		//for each destination neuron
+		for(j = 0; j < net->layerSizes[i + 1]; j++) {
+			//initialize bias
+			net->biasDeltas[i][j] = 0.0;
+			//initialize weights for each incomming
+			for(k = 0; k < net->layerSizes[i]; k++) {
+				net->weightDeltas[i][k][j] = 0.0;
+			}
+		}
+	}
+}
 int trainNet(NeuralNetwork* net, Sample* samples, unsigned int numberOfSamples,
 	unsigned int epochs, unsigned int batchSize, double learningRate) {
 	unsigned int epoch = 0;
@@ -136,6 +155,7 @@ int trainNet(NeuralNetwork* net, Sample* samples, unsigned int numberOfSamples,
 		shuffleSamples(samples, numberOfSamples);
 		//for each mini batch
 			//set accumulated deltas to 0
+			initializeDeltas(net);
 			//for each sample
 				//update deltas
 			//update weights + biases

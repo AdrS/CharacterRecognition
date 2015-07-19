@@ -39,4 +39,6 @@ void printNet(FILE* out, NeuralNetwork* net, char printDeltas);
 int trainNet(NeuralNetwork* net, Sample* samples, unsigned int numberOfSamples,
 	unsigned int epochs, unsigned int batchSize, double learningRate);
 int isValidNet(NeuralNetwork* net);
+//gives initializes all deltas to 0
+void initializeDeltas(NeuralNetwork* net);
 #endif

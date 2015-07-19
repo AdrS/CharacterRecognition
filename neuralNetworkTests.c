@@ -27,15 +27,18 @@ int main() {
 		printf("could not create net\n");
 		return ret;
 	}
-	printf("ORIGINAL SAMPLES\n");
+	puts("ORIGINAL SAMPLES");
 	printSamples(NULL, xorSamples, 4, 2, 1);
 	shuffleSamples(xorSamples, 4);
-	printf("\nSHUFFLED SAMPLES\n");
+	puts("\nSHUFFLED SAMPLES");
 	printSamples(NULL, xorSamples, 4, 2, 1);
 	putchar('\n');
-
+	
+	puts("BEFORE TRAINGING");
 	printNet(stdout, &xorNet, 1);
 	trainNet(&xorNet, xorSamples, 4, 20, 4, 0.1);
+	puts("AFTER TRAINGING");
+	printNet(stdout, &xorNet, 1);
 	deleteNet(&xorNet, 0);
 	/*
 	NeuralNetwork nn;
