@@ -32,7 +32,7 @@ int createNet(NeuralNetwork* net, unsigned int* sizes, unsigned int layers, Acti
 //freeLayerSizes specifies whether that should be freed
 //this function assumes that the net was created with createNet
 int deleteNet(NeuralNetwork* net, char freeLayerSizes);
-void printNet(FILE* out, NeuralNetwork* net, char printDeltas);
+void printNet(FILE* out, NeuralNetwork* net, char printEverything);
 
 //feedForward
 //returns 0 on success, -1 on failure, -2 on invalid params
