@@ -34,7 +34,11 @@ int createNet(NeuralNetwork* net, unsigned int* sizes, unsigned int layers, Acti
 int deleteNet(NeuralNetwork* net, char freeLayerSizes);
 void printNet(FILE* out, NeuralNetwork* net, char printEverything);
 
-//feedForward
+//input should be a pointer to layerSizes[0] doubles
+//on success a pointer to the activation output layer is returned
+//on failure or invalid params, null is returned
+double* feedForward(NeuralNetwork* net, double* input);
+
 //returns 0 on success, -1 on failure, -2 on invalid params
 int trainNet(NeuralNetwork* net, Sample* samples, unsigned int numberOfSamples,
 	unsigned int epochs, unsigned int batchSize, double learningRate);

@@ -131,7 +131,7 @@ int deleteNet(NeuralNetwork* net, char freeLayerSizes) {
 int isValidNet(NeuralNetwork* net) {
 	if(!net || !net->layerSizes || !net->biases || !net->weights || !net->activationFunction
 		|| !net->activationFunctionDerivative || !net->biasDeltas || !net->weightDeltas
-		|| !net->activations) {
+		|| !net->activations || net->layers < 2) {
 		return 0;
 	}
 	return 1;
@@ -198,6 +198,33 @@ int trainNet(NeuralNetwork* net, Sample* samples, unsigned int numberOfSamples,
 		epoch++;
 	}
 	return 0;
+}
+double* feedForward(NeuralNetwork* net, double* inputs) {
+	unsigned int i, cSize, nSize;
+	double* currentLayer;
+	double* nextLayer;
+	if(!inputs || !isValidNet(net)) {
+		return NULL;
+	}
+	//copy inputs (for later reference)
+	for(i = 0; i < net->layerSizes[0]; i++) {
+		net->activations[0][i] = inputs[i];
+	}
+	//TODO: finish this
+	//feed forward to each successive layer
+	for(i = 1; i < net->layers; i++) {
+		currentLayer = net->activations[i - 1];
+		nextLayer = net->activations[i];
+		cSize = net->layerSizes[i - 1];
+		nSize = net->layerSizes[i];
+		//TODO: I SCREWED UP THE WEIGHT MATRIX FORMAT SHOULD BE dest src instead of vice verse
+		//matrixVectorProduct(net->weights[i - 1], currentLayer, nextLayer, cSize, nSize);
+		//add biases wa => wa + b
+		add(nextLayer, net->biases[i - 1], nextLayer, nSize);
+		//apply activation function wa + b => f(wa + b)
+		applyOnEach(nextLayer, nextLayer, net->activationFunction, nSize);
+	}
+	return net->activations[i - 1];
 }
 void printNet(FILE* out, NeuralNetwork* net, char printEverything) {
 	//TODO: this could be refactored to be shorted and more concise
