@@ -21,6 +21,7 @@ int main() {
 	int ret;
 	NeuralNetwork xorNet;
 	//srand(time(NULL));
+	puts("creating net ...");
 	ret = createNet(&xorNet, xorLayerSizes, 3, LOGISTIC);
 	if(ret) {
 		printf("could not create net\n");
@@ -33,7 +34,7 @@ int main() {
 	printSamples(NULL, xorSamples, 4, 2, 1);
 	putchar('\n');
 
-	printNet(stdout, &xorNet);
+	printNet(stdout, &xorNet, 1);
 	trainNet(&xorNet, xorSamples, 4, 20, 4, 0.1);
 	deleteNet(&xorNet, 0);
 	/*

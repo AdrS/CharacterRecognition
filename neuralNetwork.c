@@ -42,8 +42,14 @@ int createNet(NeuralNetwork* net, unsigned int* sizes, unsigned int layers, Acti
 		//for each source there will be an array of output connection weights
 		totalMemForPointers += sizes[i - 1];
 	}
-	totalMemForPointers += 2*(layers - 1); //all layers have biases and weight matricies except 1st
+	//all layers have biases and weight matricies except 1st
+	totalMemForPointers += 2*(layers - 1); 
+	totalMemForWeights *= 2; //these are doubled because for each weight there is a weight delta
+	totalMemForPointers *= 2;
 
+	//TODO: #######################################################################	
+	//	allocate memory for activations
+	//TODO: #######################################################################	
 	//all pointers are 1 word, so sizeof(void*) should equal sizeof(double*) and sizeof(double**)
 	allocated = malloc(totalMemForWeights*sizeof(double) + totalMemForPointers * sizeof(void*));
 	if(!allocated) {
@@ -58,20 +64,32 @@ int createNet(NeuralNetwork* net, unsigned int* sizes, unsigned int layers, Acti
 	//divy up memory for all layers with inputs
 	net->biases = allocated;
 	allocated += sizeof(double*) * (layers - 1);
+	net->biasDeltas = allocated;
+	allocated += sizeof(double*) * (layers - 1);
 	net->weights = allocated;
+	allocated += sizeof(double**) * (layers - 1);
+	net->weightDeltas = allocated;
 	allocated += sizeof(double**) * (layers - 1);
 	for(i = 1; i < layers; i++) {
 		//give space for the biases coming into layer i
 		net->biases[i - 1] = allocated;
 		allocated += sizeof(double) * sizes[i];
+		net->biasDeltas[i - 1] = allocated;
+		allocated += sizeof(double) * sizes[i];
+
 		//initialize biases
 		for(j = 0; j < sizes[i]; j++) {
 			net->biases[i - 1][j] = sampleGuassianDistribution(0.0, 1.0);
 		}
+		//do not bother initializing the deltas (will be done at beggining of each training epoch)
 		net->weights[i - 1] = allocated;
+		allocated += sizeof(double**) * sizes[i - 1];
+		net->weightDeltas[i - 1] = allocated;
 		allocated += sizeof(double**) * sizes[i - 1];
 		for(j = 0; j < sizes[i - 1]; j++) {
 			net->weights[i - 1][j] = allocated;
+			allocated += sizeof(double*) * sizes[i];
+			net->weightDeltas[i - 1][j] = allocated;
 			allocated += sizeof(double*) * sizes[i];
 			for(k = 0; k < sizes[i]; k++) {
 				net->weights[i - 1][j][k] = sampleGuassianDistribution(0.0, 1.0);
@@ -93,13 +111,16 @@ int deleteNet(NeuralNetwork* net, char freeLayerSizes) {
 	net->_allocated = NULL;
 	net->biases = NULL;
 	net->weights = NULL;
+	net->biasDeltas = NULL;
+	net->weightDeltas = NULL;
 	net->activationFunction = NULL;
 	net->activationFunctionDerivative = NULL;
 	return 0;
 }
 int isValidNet(NeuralNetwork* net) {
 	if(!net || !net->layerSizes || !net->biases || !net->weights || !net->activationFunction
-		|| !net->activationFunctionDerivative) {
+		|| !net->activationFunctionDerivative || !net->biasDeltas || !net->weightDeltas
+		|| !net->activations) {
 		return 0;
 	}
 	return 1;
@@ -113,30 +134,50 @@ int trainNet(NeuralNetwork* net, Sample* samples, unsigned int numberOfSamples,
 	}
 	while(epoch < epochs) {
 		shuffleSamples(samples, numberOfSamples);
+		//for each mini batch
+			//set accumulated deltas to 0
+			//for each sample
+				//update deltas
+			//update weights + biases
 		epoch++;
 	}
 	return 0;
 }
-void printNet(FILE* out, NeuralNetwork* net) {
+void printNet(FILE* out, NeuralNetwork* net, char printDeltas) {
 	unsigned int i;
-	//TODO: refactor some of this into an isvalid function
-	if(!out || !net || !net->layerSizes || !net->biases || !net->weights) {
+	if(!out || !isValidNet(net)) {
 		return;
 	}
 	fprintf(out, "Layers: 1 input, %d hidden, and 1 output\n", net->layers - 2);
 	fprintf(out, "Entry i, j of the connect weights table is the weight from\n");
 	fprintf(out, "the ith entry of the previous layer the the jth entry of the current layer\n");
-	fprintf(out, "Input layer (%d nodes):\n", net->layerSizes[0]);
+	fprintf(out, "Input layer (%d nodes):\n\n", net->layerSizes[0]);
 	for(i = 1; i < net->layers - 1; i++) {
 		fprintf(out, "Hidden layer %d (%d nodes):\n", i, net->layerSizes[i]);
 		fprintf(out, "Bias weights:\n");
 		printVector(out, net->biases[i - 1], net->layerSizes[i]);
-		fprintf(out, "\nWeights (rows incoming node, cols desination node):\n");
+		if(printDeltas) {
+			fprintf(out, "\nBias weight deltas:\n");
+			printVector(out, net->biasDeltas[i - 1], net->layerSizes[i]);
+		}
+		fprintf(out, "\n\nWeights (rows incoming node, cols desination node):\n");
 		printMatrix(out, net->weights[i - 1], net->layerSizes[i - 1], net->layerSizes[i]);
+		if(printDeltas) {
+			fprintf(out, "Weight deltas:\n");
+			printMatrix(out, net->weightDeltas[i - 1], net->layerSizes[i - 1], net->layerSizes[i]);
+		}
 	}
-	fprintf(out, "Output layer (%d nodes):\n", net->layerSizes[i]);
+	fprintf(out, "\nOutput layer (%d nodes):\n", net->layerSizes[i]);
 	fprintf(out, "Bias weights:\n");
 	printVector(out, net->biases[i - 1], net->layerSizes[i]);
-	fprintf(out, "\nWeights (rows incoming node, cols desination node):\n");
+	if(printDeltas) {
+		fprintf(out, "\nBias weight deltas:\n");
+		printVector(out, net->biasDeltas[i - 1], net->layerSizes[i]);
+	}
+	fprintf(out, "\n\nWeights (rows incoming node, cols desination node):\n");
 	printMatrix(out, net->weights[i - 1], net->layerSizes[i - 1], net->layerSizes[i]);
+	if(printDeltas) {
+		fprintf(out, "Weight deltas:\n");
+		printMatrix(out, net->weightDeltas[i - 1], net->layerSizes[i - 1], net->layerSizes[i]);
+	}
 }

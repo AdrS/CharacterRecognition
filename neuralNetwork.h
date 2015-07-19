@@ -15,7 +15,10 @@ typedef struct {
 	unsigned int layers;
 	unsigned int* layerSizes;
 	double** biases;
+	double** biasDeltas;
 	double*** weights;
+	double*** weightDeltas;
+	double** activations;	//TODO: set up this
 	double (*activationFunction)(double);
 	double (*activationFunctionDerivative)(double);
 	//this is for intermal memory bookeeping
@@ -29,7 +32,7 @@ int createNet(NeuralNetwork* net, unsigned int* sizes, unsigned int layers, Acti
 //freeLayerSizes specifies whether that should be freed
 //this function assumes that the net was created with createNet
 int deleteNet(NeuralNetwork* net, char freeLayerSizes);
-void printNet(FILE* out, NeuralNetwork* net);
+void printNet(FILE* out, NeuralNetwork* net, char printDeltas);
 
 //feedForward
 //returns 0 on success, -1 on failure, -2 on invalid params
