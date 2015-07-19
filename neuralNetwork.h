@@ -41,4 +41,7 @@ int trainNet(NeuralNetwork* net, Sample* samples, unsigned int numberOfSamples,
 int isValidNet(NeuralNetwork* net);
 //gives initializes all deltas to 0
 void initializeDeltas(NeuralNetwork* net);
+//scalar should be learningRate/batch size
+void updateWeights(NeuralNetwork* net, double scalar);
+
 #endif

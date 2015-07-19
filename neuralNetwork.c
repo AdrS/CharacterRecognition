@@ -144,6 +144,27 @@ void initializeDeltas(NeuralNetwork* net) {
 		}
 	}
 }
+void updateWeights(NeuralNetwork* net, double scalar) {
+	unsigned int i, j, k;
+	//TODO: this is a helper methods, so the checks are unessicary mostly
+	//add preprocessor statements to dissable this?
+	//same goes for initializeDeltas, and probably other functions
+	if(!isValidNet(net)) {
+		return;
+	}
+	//for each layer except the input
+	for(i = 0; i < net->layers - 1; i++) {
+		//for each destination neuron
+		for(j = 0; j < net->layerSizes[i + 1]; j++) {
+			//update bias
+			net->biases[i][j] -= scalar * net->biasDeltas[i][j];
+			//update weights for each incomming
+			for(k = 0; k < net->layerSizes[i]; k++) {
+				net->weights[i][k][j] -= scalar * net->weightDeltas[i][k][j];
+			}
+		}
+	}
+}
 int trainNet(NeuralNetwork* net, Sample* samples, unsigned int numberOfSamples,
 	unsigned int epochs, unsigned int batchSize, double learningRate) {
 	unsigned int epoch = 0;
@@ -159,6 +180,10 @@ int trainNet(NeuralNetwork* net, Sample* samples, unsigned int numberOfSamples,
 			//for each sample
 				//update deltas
 			//update weights + biases
+			//if number of samples is not a multiple of batchSize
+			//then the last batch will have a different size
+			//when this is fully implemented change the 2nd param to account for this
+			updateWeights(net, learningRate/(double)batchSize); //TODO: could use some more testing
 		epoch++;
 	}
 	return 0;
