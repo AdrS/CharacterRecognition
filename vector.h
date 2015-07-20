@@ -18,6 +18,10 @@ void subtract(double* a, double* b, double* difference, unsigned int components)
 void hadamardProduct(double* a, double* b, double* product, unsigned int components);
 //v must have cols entries and product must point to rows worth of allocated doubles
 void matrixVectorProduct(double** m, double* v, double* product, unsigned int rows, unsigned int cols);
+//multiplies the vector by the transpose of the matrix
+//rows and cols are the dimensions of the original matrix, so mT is a cols x rows matrix
+//v must have rows components then and product must have cols components
+void matrixTransposeVectorProduct(double** m, double* v, double* product, unsigned int rows, unsigned int cols);
 //applies func to each element in src and stores the result in dest
 void applyOnEach(double* src, double* dest, double (*func)(double), unsigned int components);
 void printVector(FILE* out, double* v, unsigned int components);

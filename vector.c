@@ -53,6 +53,19 @@ void matrixVectorProduct(double** m, double* v, double* product, unsigned int ro
 		product[i] = sum;
 	}
 }
+void matrixTransposeVectorProduct(double** m, double* v, double* product, unsigned int rows, unsigned int cols) {
+	unsigned int i, j;
+	double sum;
+	assert(m && v && product);
+	for(i = 0; i < cols; i++) {
+		//assert(m[i]);
+		sum = 0.0;
+		for(j = 0; j < rows; j++) {
+			sum += m[j][i] * v[j];
+		}
+		product[i] = sum;
+	}
+}
 void applyOnEach(double* src, double* dest, double (*func)(double), unsigned int components) {
 	unsigned int i;
 	assert(src && dest && func);
