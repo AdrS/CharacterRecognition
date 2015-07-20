@@ -14,6 +14,8 @@ void scale(double* src, double* dest, double scalar, unsigned int components);
 void add(double* a, double* b, double* sum, unsigned int components);
 //subtracts a from b
 void subtract(double* a, double* b, double* difference, unsigned int components);
+//h(a,b) has ith component ai * bi
+void hadamardProduct(double* a, double* b, double* product, unsigned int components);
 //v must have cols entries and product must point to rows worth of allocated doubles
 void matrixVectorProduct(double** m, double* v, double* product, unsigned int rows, unsigned int cols);
 //applies func to each element in src and stores the result in dest

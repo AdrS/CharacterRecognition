@@ -30,6 +30,8 @@ int main() {
 	printVector(stdout, c, 3);
 	printf("\nabs(b - a) = ");
 	applyOnEach(c, c, fabs, 3);
+	printf("\na * b = ");
+	hadamardProduct(a, b, c, 3);
 	printVector(stdout, c, 3);
 	printf("\nm = \n");
 	printMatrix(stdout, m, 5, 3);

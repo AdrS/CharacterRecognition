@@ -2,7 +2,7 @@
 
 double innerProduct(double* a, double* b, unsigned int components) {
 	double sum = 0.0;
-	int i;
+	unsigned int i;
 	assert(a && b);
 	for(i = 0; i < components; i++) {
 		sum += a[i] * b[i];
@@ -13,28 +13,35 @@ double magnitude(double* a, unsigned int components) {
 	return sqrt(innerProduct(a, a, components));
 }
 void scale(double* src, double* dest, double scalar, unsigned int components) {
-	int i;
+	unsigned int i;
 	assert(src && dest);
 	for(i = 0; i < components; i++) {
 		dest[i] = src[i] * scalar;
 	}
 }
 void add(double* a, double* b, double* sum, unsigned int components) {
-	int i;
+	unsigned int i;
 	assert(a && b && sum);
 	for(i = 0; i < components; i++) {
 		sum[i] = a[i] + b[i];
 	}
 }
 void subtract(double* a, double* b, double* difference, unsigned int components) {
-	int i;
+	unsigned int i;
 	assert(a && b && difference);
 	for(i = 0; i < components; i++) {
 		difference[i] = b[i] - a[i];
 	}
 }
+void hadamardProduct(double* a, double* b, double* product, unsigned int components) {
+	unsigned int i;
+	assert(a && b && product);
+	for(i = 0; i < components; i++) {
+		product[i] = a[i] * b[i];
+	}
+}
 void matrixVectorProduct(double** m, double* v, double* product, unsigned int rows, unsigned int cols) {
-	int i, j;
+	unsigned int i, j;
 	double sum;
 	assert(m && v && product);
 	for(i = 0; i < rows; i++) {
@@ -47,7 +54,7 @@ void matrixVectorProduct(double** m, double* v, double* product, unsigned int ro
 	}
 }
 void applyOnEach(double* src, double* dest, double (*func)(double), unsigned int components) {
-	int i;
+	unsigned int i;
 	assert(src && dest && func);
 	for(i = 0; i < components; i++) {
 		dest[i] = func(src[i]);
@@ -55,7 +62,7 @@ void applyOnEach(double* src, double* dest, double (*func)(double), unsigned int
 }
 void printVector(FILE* out, double* v, unsigned int components) {
 	//TODO: should I return number of characters written???
-	int i;
+	unsigned int i;
 	assert(out && v);
 	fputc('[', out);
 	for(i = 0; i < components - 1; i++) {
@@ -67,7 +74,7 @@ void printVector(FILE* out, double* v, unsigned int components) {
 	fputc(']', out);
 }
 void printMatrix(FILE* out, double** m, unsigned int rows, unsigned int cols) {
-	int i, j;
+	unsigned int i, j;
 	assert(out && m);
 	fputc('[', out);
 	//print first row

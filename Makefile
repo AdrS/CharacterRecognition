@@ -2,7 +2,7 @@ CC = gcc
 CCFLAGS = -c -Wall
 CLFLAGS = -o
 
-all: main
+all: main neuralNetworkTests vectorTests
 main: logisticRegression.o mnist.o main.o functions.o sample.o vector.o
 	$(CC) logisticRegression.o mnist.o main.o functions.o sample.o vector.o $(CLFLAGS) main
 
@@ -15,13 +15,13 @@ logisticRegression.o: logisticRegression.c logisticRegression.h
 
 #START TESTING CODE
 neuralNetworkTests: neuralNetworkTests.o neuralNetwork.o vector.o functions.o sample.o
-	$(CC) neuralNetworkTests.o neuralNetwork.o vector.o functions.o sample.o $(CLFLAGS) main
+	$(CC) neuralNetworkTests.o neuralNetwork.o vector.o functions.o sample.o $(CLFLAGS) neuralNetworkTests
 
 neuralNetworkTests.o: neuralNetworkTests.c
 	$(CC) $(CCFLAGS) neuralNetworkTests.c
 
 vectorTests: vectorTests.o vector.o
-	$(CC) vectorTests.o vector.o $(CLFLAGS) main
+	$(CC) vectorTests.o vector.o $(CLFLAGS) vectorTests
 
 vectorTests.o: vectorTests.c
 	$(CC) $(CCFLAGS) vectorTests.c
