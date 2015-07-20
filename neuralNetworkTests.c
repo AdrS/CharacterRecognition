@@ -34,12 +34,12 @@ int main() {
 	puts("\nSHUFFLED SAMPLES");
 	printSamples(NULL, xorSamples, 4, 2, 1);
 	putchar('\n');
+#endif
 	
 	puts("BEFORE TRAINGING");
-#endif
 	printNet(stdout, &xorNet, 1);
-	feedForward(&xorNet, xorSamples[2].inputs);
-	//trainNet(&xorNet, xorSamples, 4, 20, 4, 0.1);
+	//feedForward(&xorNet, xorSamples[2].inputs);
+	trainNet(&xorNet, xorSamples, 4, 20, 3, 0.1);
 	puts("AFTER TRAINGING");
 	printNet(stdout, &xorNet, 1);
 	deleteNet(&xorNet, 0);

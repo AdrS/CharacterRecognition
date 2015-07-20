@@ -16,11 +16,14 @@ typedef struct {
 	unsigned int* layerSizes;
 	double** biases;
 	double** biasDeltas;
+	double** biasDeltas;
 	//the rows of each weight matrix are for the destination neuron
 	//cols are for inputting neuron
 	double*** weights;
 	double*** weightDeltas;
-	double** activations;	//TODO: set up this
+	double*** weightDelta;
+	double** activations;
+	double** preActivations;
 	double (*activationFunction)(double);
 	double (*activationFunctionDerivative)(double);
 	//this is for intermal memory bookeeping
@@ -47,6 +50,8 @@ int trainNet(NeuralNetwork* net, Sample* samples, unsigned int numberOfSamples,
 int isValidNet(NeuralNetwork* net);
 //gives initializes all deltas to 0
 void initializeDeltas(NeuralNetwork* net);
+//this is where the backpropagation takes place, target is desired output
+void updateDeltas(NeuralNetwork* net, double* target);
 //scalar should be learningRate/batch size
 void updateWeights(NeuralNetwork* net, double scalar);
 

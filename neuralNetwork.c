@@ -178,25 +178,39 @@ void updateWeights(NeuralNetwork* net, double scalar) {
 		}
 	}
 }
+void updateDeltas(NeuralNetwork* net, double* target) {
+	//TODO: could test for net validity, but do I really need to?
+	if(!net || !target) {
+		return;
+	}
+	//delta = (activation - target) * derivative(pre activation)
+	//for the previous layers
+		//
+}
 int trainNet(NeuralNetwork* net, Sample* samples, unsigned int numberOfSamples,
 	unsigned int epochs, unsigned int batchSize, double learningRate) {
-	unsigned int epoch = 0;
+	unsigned int epoch = 0, startIndex, i, currentBatchSize;
 	if(!samples || epochs < 1 || batchSize < 1 || batchSize > numberOfSamples
 		|| learningRate <= 0.0 || !isValidNet(net)) {
 		return -2;
 	}
 	while(epoch < epochs) {
 		shuffleSamples(samples, numberOfSamples);
-		//for each mini batch
-			//set accumulated deltas to 0
+		startIndex = 0;
+		//while there are still mini batches
+		while(startIndex < numberOfSamples) {
+			currentBatchSize = fmin(numberOfSamples - startIndex, batchSize);
+			printf("epoch: %d, currentBatchSize: %d\n", epoch, currentBatchSize);
 			initializeDeltas(net);
-			//for each sample
+			for(i = 0; i < currentBatchSize; i++) {
+				//feedForward
+				feedForward(net, samples[startIndex + i].inputs);
 				//update deltas
-			//update weights + biases
-			//if number of samples is not a multiple of batchSize
-			//then the last batch will have a different size
-			//when this is fully implemented change the 2nd param to account for this
-			updateWeights(net, learningRate/(double)batchSize); //TODO: could use some more testing
+				//TODO: add this code
+			}
+			updateWeights(net, learningRate/(double)currentBatchSize);
+			startIndex += currentBatchSize;
+		}
 		epoch++;
 	}
 	return 0;
