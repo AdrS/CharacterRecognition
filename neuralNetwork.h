@@ -15,8 +15,9 @@ typedef struct {
 	unsigned int layers;
 	unsigned int* layerSizes;
 	double** biases;
+	//TODO: accumulatedBiasDeltas is a better name
 	double** biasDeltas;
-	double** biasDeltas;
+	double** biasDelta;
 	//the rows of each weight matrix are for the destination neuron
 	//cols are for inputting neuron
 	double*** weights;

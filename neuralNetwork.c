@@ -48,9 +48,11 @@ int createNet(NeuralNetwork* net, unsigned int* sizes, unsigned int layers, Acti
 	}
 	//all layers have biases and weight matricies except 1st
 	totalMemForPointers += 2*(layers - 1); 
-	totalMemForWeights *= 2; //these are doubled because for each weight there is a weight delta
-	totalMemForPointers *= 2;
-	totalMemForPointers += layers;	//activation vector for each layer
+	//these are trippled because for each weight there is a weight delta and accumulated weight deltas
+	totalMemForWeights *= 3;
+	totalMemForPointers *= 3;
+	totalMemForPointers += 2*layers;	//activation & preacitivation vector for each layer
+	totalMemForActivations *= 2;	//need to store activations and preactivations (for backprop)
 
 	//all pointers are 1 word, so sizeof(void*) should equal sizeof(double*) and sizeof(double**)
 	allocated = malloc((totalMemForWeights + totalMemForActivations)*sizeof(double) +
@@ -69,19 +71,29 @@ int createNet(NeuralNetwork* net, unsigned int* sizes, unsigned int layers, Acti
 	allocated += sizeof(double*) * (layers - 1);
 	net->biasDeltas = allocated;
 	allocated += sizeof(double*) * (layers - 1);
+	net->biasDelta = allocated;
+	allocated += sizeof(double*) * (layers - 1);
 	net->weights = allocated;
 	allocated += sizeof(double**) * (layers - 1);
 	net->weightDeltas = allocated;
 	allocated += sizeof(double**) * (layers - 1);
+	net->weightDelta = allocated;
+	allocated += sizeof(double**) * (layers - 1);
 	net->activations = allocated;
 	allocated += sizeof(double*) * layers;
+	net->preActivations= allocated;
+	allocated += sizeof(double*) * layers;
 	net->activations[0] = allocated;
+	allocated += sizeof(double) * sizes[0];
+	net->preActivations[0] = allocated;
 	allocated += sizeof(double) * sizes[0];
 	for(i = 1; i < layers; i++) {
 		//give space for the biases coming into layer i
 		net->biases[i - 1] = allocated;
 		allocated += sizeof(double) * sizes[i];
 		net->biasDeltas[i - 1] = allocated;
+		allocated += sizeof(double) * sizes[i];
+		net->biasDelta[i - 1] = allocated;
 		allocated += sizeof(double) * sizes[i];
 
 		//initialize biases
@@ -93,11 +105,15 @@ int createNet(NeuralNetwork* net, unsigned int* sizes, unsigned int layers, Acti
 		allocated += sizeof(double*) * sizes[i];
 		net->weightDeltas[i - 1] = allocated;
 		allocated += sizeof(double*) * sizes[i];
+		net->weightDelta[i - 1] = allocated;
+		allocated += sizeof(double*) * sizes[i];
 		//for each destination node
 		for(j = 0; j < sizes[i]; j++) {
 			net->weights[i - 1][j] = allocated;
 			allocated += sizeof(double) * sizes[i - 1];
 			net->weightDeltas[i - 1][j] = allocated;
+			allocated += sizeof(double) * sizes[i - 1];
+			net->weightDelta[i - 1][j] = allocated;
 			allocated += sizeof(double) * sizes[i - 1];
 			//initialize connection weight from each source node
 			for(k = 0; k < sizes[i - 1]; k++) {
@@ -106,6 +122,8 @@ int createNet(NeuralNetwork* net, unsigned int* sizes, unsigned int layers, Acti
 		}
 		//do not bother initializing the activations either
 		net->activations[i] = allocated;
+		allocated += sizeof(double) * sizes[i];
+		net->preActivations[i] = allocated;
 		allocated += sizeof(double) * sizes[i];
 	}
 	return 0;
@@ -124,8 +142,11 @@ int deleteNet(NeuralNetwork* net, char freeLayerSizes) {
 	net->biases = NULL;
 	net->weights = NULL;
 	net->biasDeltas = NULL;
+	net->biasDelta = NULL;
 	net->weightDeltas = NULL;
+	net->weightDelta = NULL;
 	net->activations = NULL;
+	net->preActivations = NULL;
 	net->activationFunction = NULL;
 	net->activationFunctionDerivative = NULL;
 	return 0;
@@ -133,7 +154,8 @@ int deleteNet(NeuralNetwork* net, char freeLayerSizes) {
 int isValidNet(NeuralNetwork* net) {
 	if(!net || !net->layerSizes || !net->biases || !net->weights || !net->activationFunction
 		|| !net->activationFunctionDerivative || !net->biasDeltas || !net->weightDeltas
-		|| !net->activations || net->layers < 2) {
+		|| !net->activations || net->layers < 2 || !net->biasDelta || !net->preActivations
+		|| !net->weightDelta) {
 		return 0;
 	}
 	return 1;
@@ -217,27 +239,30 @@ int trainNet(NeuralNetwork* net, Sample* samples, unsigned int numberOfSamples,
 }
 double* feedForward(NeuralNetwork* net, double* inputs) {
 	unsigned int i, cSize, nSize;
-	double* currentLayer;
-	double* nextLayer;
+	double* cla, *nlp, *nla;
 	if(!inputs || !isValidNet(net)) {
 		return NULL;
 	}
 	//copy inputs (for later reference)
 	for(i = 0; i < net->layerSizes[0]; i++) {
+		net->preActivations[0][i] = inputs[i];
 		net->activations[0][i] = inputs[i];
 	}
 	//feed forward to each successive layer
 	for(i = 1; i < net->layers; i++) {
-		currentLayer = net->activations[i - 1];
-		nextLayer = net->activations[i];
+		cla = net->activations[i - 1];
+		nlp = net->preActivations[i];
+		nla = net->activations[i];
 		cSize = net->layerSizes[i - 1];
 		nSize = net->layerSizes[i];
 		//multiply current layer by weights
-		matrixVectorProduct(net->weights[i - 1], currentLayer, nextLayer, nSize, cSize);
+		matrixVectorProduct(net->weights[i - 1], cla, nlp, nSize, cSize);
 		//add biases wa => wa + b
-		add(nextLayer, net->biases[i - 1], nextLayer, nSize);
+		add(nlp, net->biases[i - 1], nlp, nSize);
+		//up until now everything is saved in preactivation function
+		//now the output of the activation function is stored in the activation vector instead
 		//apply activation function wa + b => f(wa + b)
-		applyOnEach(nextLayer, nextLayer, net->activationFunction, nSize);
+		applyOnEach(nlp, nla, net->activationFunction, nSize);
 	}
 	return net->activations[i - 1];
 }
