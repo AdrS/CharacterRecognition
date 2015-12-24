@@ -29,6 +29,7 @@ typedef struct {
 	double (*activationFunctionDerivative)(double);
 	//this is for intermal memory bookeeping
 	void* _allocated;
+	double* scratchPaper;
 } NeuralNetwork;
 
 //returns 0 on success, -1 on failure, -2 on invalid params

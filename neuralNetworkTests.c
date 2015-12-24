@@ -37,9 +37,9 @@ int main() {
 #endif
 	
 	puts("BEFORE TRAINGING");
-	printNet(stdout, &xorNet, 1);
+	printNet(stdout, &xorNet, 0);
 	//feedForward(&xorNet, xorSamples[2].inputs);
-	trainNet(&xorNet, xorSamples, 4, 20, 3, 0.1);
+	trainNet(&xorNet, xorSamples, 4, 1, 4, 0.1);
 	puts("AFTER TRAINGING");
 	printNet(stdout, &xorNet, 1);
 	deleteNet(&xorNet, 0);

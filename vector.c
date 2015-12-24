@@ -54,6 +54,8 @@ void matrixVectorProduct(double** m, double* v, double* product, unsigned int ro
 	}
 }
 void matrixTransposeVectorProduct(double** m, double* v, double* product, unsigned int rows, unsigned int cols) {
+	//rows and cols are the dimensions of the original matrix, so mT is a cols x rows matrix
+	//v must have rows components then and product must have cols components
 	unsigned int i, j;
 	double sum;
 	assert(m && v && product);

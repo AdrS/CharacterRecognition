@@ -3,7 +3,7 @@
 
 int createNet(NeuralNetwork* net, unsigned int* sizes, unsigned int layers, ActivationFunctionType type) {
 	unsigned int totalMemForWeights = 0, totalMemForPointers = 0, i, j, k;
-	unsigned int totalMemForActivations = 0;
+	unsigned int totalMemForActivations = 0, maxLayerSize = 0;
 	void* allocated;
 	//there must at least be an input and an output layer
 	if(!net || !sizes || layers < 2) {
@@ -32,10 +32,14 @@ int createNet(NeuralNetwork* net, unsigned int* sizes, unsigned int layers, Acti
 	//calculate memory requirements
 	//memory for input layer
 	totalMemForActivations += sizes[0];
+	maxLayerSize = sizes[0];
 	for(i = 1; i < layers; i++) {
 		//layers must have at lest one neuron
 		if(sizes[i] < 1) {
 			return -2;
+		}
+		if(sizes[i] > maxLayerSize) {
+			maxLayerSize = sizes[i];
 		}
 		//one bias weight for each neuron except those in input layer
 		//there are sizes[i] desitination neurons and sizes[i - 1] source neurons
@@ -55,7 +59,7 @@ int createNet(NeuralNetwork* net, unsigned int* sizes, unsigned int layers, Acti
 	totalMemForActivations *= 2;	//need to store activations and preactivations (for backprop)
 
 	//all pointers are 1 word, so sizeof(void*) should equal sizeof(double*) and sizeof(double**)
-	allocated = malloc((totalMemForWeights + totalMemForActivations)*sizeof(double) +
+	allocated = malloc((totalMemForWeights + totalMemForActivations + maxLayerSize)*sizeof(double) +
 				totalMemForPointers * sizeof(void*));
 	if(!allocated) {
 		fprintf(stderr,"error: allocation failed in 'createNet'\n");
@@ -67,6 +71,10 @@ int createNet(NeuralNetwork* net, unsigned int* sizes, unsigned int layers, Acti
 	net->_allocated = allocated;
 
 	//divy up memory
+	//TODO: this is really repititious and boiler plate. Refactor this.
+	//memory for scratch paper
+	net->scratchPaper = allocated;
+	allocated += sizeof(double)*maxLayerSize;
 	net->biases = allocated;
 	allocated += sizeof(double*) * (layers - 1);
 	net->biasDeltas = allocated;
@@ -149,6 +157,7 @@ int deleteNet(NeuralNetwork* net, char freeLayerSizes) {
 	net->preActivations = NULL;
 	net->activationFunction = NULL;
 	net->activationFunctionDerivative = NULL;
+	net->scratchPaper = NULL;
 	return 0;
 }
 int isValidNet(NeuralNetwork* net) {
@@ -202,10 +211,47 @@ void updateWeights(NeuralNetwork* net, double scalar) {
 }
 void updateDeltas(NeuralNetwork* net, double* target) {
 	//TODO: could test for net validity, but do I really need to?
+	unsigned int layer, size;
 	if(!net || !target) {
 		return;
 	}
-	//delta = (activation - target) * derivative(pre activation)
+	layer = net->layers - 1;
+	size = net->layerSizes[layer];
+	//delta_l = (activation_l - target)*sigma'(preActivation_l)
+	subtract(target, net->activations[layer], net->biasDelta[layer - 1], size);
+	applyOnEach(net->preActivations[layer], net->scratchPaper, net->activationFunctionDerivative, size);
+	hadamardProduct(net->biasDelta[layer - 1], net->scratchPaper, net->biasDelta[layer - 1], size);
+	//dC/db_l = delta_l
+	//TODO: beware of unsigned int underflow
+	//work backwards for each layer
+	//do {
+#define DEBUG 1
+#if DEBUG
+	puts("########################################");
+	printf("layer %d, size %d\n", layer, size);
+	puts("TARGET");
+	printVector(stdout,target,size);
+	puts("PREACTIVATIONS");
+	printVector(stdout,net->preActivations[layer],size);
+	puts("sigma'(preActivations)");
+	printVector(stdout,net->scratchPaper,size);
+	puts("bias delta");
+	printVector(stdout,net->biasDelta[layer - 1],size);
+	printf("error: %f\n", magnitude(net->biasDelta[layer - 1], size));
+	puts("CURRENT STATE");
+	printNet(stdout, net, 1);
+#endif
+/*
+		layer--;
+		size = net->layerSizes[layer];
+		//delta_l = (W_l+1^T * delta_l+1) hprod sigma'(preactive_l)
+		applyOnEach(net->preActivations[layer],net->scratchPaper, net->activationFunctionDerivative, size);
+		matrixTransposeVectorProduct(net->weights[layer], net->biasDelta[layer],
+			net->biasDelta[layer - 1], size, net->layerSizes[layer + 1]);
+	} while(layer > 0);
+*/
+		//dc/db = delta_l
+		//dc/dw = act_l-1 delta_l
 	//for the previous layers
 		//
 }
@@ -228,7 +274,7 @@ int trainNet(NeuralNetwork* net, Sample* samples, unsigned int numberOfSamples,
 				//feedForward
 				feedForward(net, samples[startIndex + i].inputs);
 				//update deltas
-				//TODO: add this code
+				updateDeltas(net, samples[startIndex + i].outputs);
 			}
 			updateWeights(net, learningRate/(double)currentBatchSize);
 			startIndex += currentBatchSize;
